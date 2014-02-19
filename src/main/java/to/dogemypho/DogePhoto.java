@@ -1,5 +1,6 @@
 package to.dogemypho;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -51,7 +52,7 @@ public class DogePhoto {
 		List<DogeText> processedDogeText = new ArrayList<DogeText>();
 		for (Iterator<String> iterUserText = dogeText.iterator(); iterUserText.hasNext();) {
 			String newText = (String) iterUserText.next();
-			int[] textMetrics = getTextMetrics(image, newText);
+			int[] textMetrics = getTextMetrics(image, newText, fontPointSize);
 			boolean collision = false;
 			do {
 				collision = false;
@@ -65,7 +66,7 @@ public class DogePhoto {
 				}
 				if (!collision) {
 					processedDogeText.add(newDogeText);
-					addTextToImage(image, newDogeText);
+					addTextToImage(image, newDogeText, fontPointSize);
 				}
 			} while (collision);
 		}
@@ -92,19 +93,37 @@ public class DogePhoto {
 	    return new DogeText(text, x, y, textWidth, textHeight);
 	}
 
-	public void addTextToImage(BufferedImage bfi, DogeText text) {
+	public void addTextToImage(BufferedImage bfi, DogeText text, int fontPointSize) {
 		LOGGER.info("Add text to image");
 		Graphics g = bfi.getGraphics();
-	    Font font = g.getFont().deriveFont(80f);
+	    Font font = getFont(fontPointSize);
 		g.setFont(font);
+		g.setColor(getRandomColour());
 	    g.drawString(text.getText(), text.getLeft(), text.getTop());
 	    g.dispose();
 	    g = null;
 	}
+	
+	public Font getFont(int fontPointSize) {
+		return new Font("Helvetica", Font.PLAIN, fontPointSize);
+	}
 
-	public int[] getTextMetrics(BufferedImage bfi, String text) {
+	public Color getRandomColour() {
+		float r = getRandomGenerator().nextFloat();
+		float g = getRandomGenerator().nextFloat();
+		float b = getRandomGenerator().nextFloat();
+
+		return new Color(r, g, b);
+	}
+
+	public int[] getTextMetrics(BufferedImage bfi, String text, int fontPointSize) {
 		int[] result = new int[2];
-		FontMetrics fm = bfi.getGraphics().getFontMetrics();
+
+		Graphics g = bfi.getGraphics();
+	    Font font = getFont(fontPointSize);
+		g.setFont(font);
+		FontMetrics fm = g.getFontMetrics();
+		
 		result[0] = fm.stringWidth(text);
 		result[1] = fm.getHeight();
 		LOGGER.info("String: " + text + " Width: " + result[0] + " Height: " + result[1]);

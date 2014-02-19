@@ -24,6 +24,14 @@ import org.mockito.Spy;
 import org.objenesis.instantiator.basic.NewInstanceInstantiator;
 
 public class DogePhotoTest {
+	private static final int FONT_POINT_20 = 20;
+
+	private static final String SOME_LONGER_TEXT = "Some Longer Text";
+
+	private static final String SHORT_TEXT = "Short text";
+
+	private static final int FONT_POINT_80 = 80;
+
 	private static final String SO_FUN = "so fun";
 
 	private static final String MANY_TESTS = "many tests";
@@ -131,7 +139,7 @@ public class DogePhotoTest {
 		Mockito.when(userDogeTextIteratorMock.next()).thenReturn(MANY_TESTS);
 		Mockito.when(userDogeTextIteratorMock.next()).thenReturn(SO_FUN);
 
-		testObj.dogeMyPhoto(VALID_FILENAME, 10, userDogeTextListMock);
+		testObj.dogeMyPhoto(VALID_FILENAME, FONT_POINT_80, userDogeTextListMock);
 
 		Mockito.verify(userDogeTextIteratorMock, Mockito.times(4)).next();
 		Mockito.verify(userDogeTextIteratorMock, Mockito.times(5)).hasNext();
@@ -273,25 +281,52 @@ public class DogePhotoTest {
 	public void testGetTextMetrics_withText() throws IOException {
 		BufferedImage image = testObj.loadImage(VALID_FILENAME);
 
-		int[] result = testObj.getTextMetrics(image, "Short text");
+		int[] result = testObj.getTextMetrics(image, SHORT_TEXT, FONT_POINT_80);
 
 		assertNotNull(result);
 		assertEquals(-1, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(55, result[0]);
-		assertEquals(15, result[1]);
+		assertEquals(340, result[0]);
+		assertEquals(81, result[1]);
+	}
+
+	@Test
+	public void testGetTextMetrics_withMoreText() throws IOException {
+		BufferedImage image = testObj.loadImage(VALID_FILENAME);
+
+		int[] result = testObj.getTextMetrics(image, SOME_LONGER_TEXT, FONT_POINT_80);
+
+		assertNotNull(result);
+		assertEquals(-1, Integer.compare(0, result[0]));
+		assertEquals(-1, Integer.compare(0, result[1]));
+		assertEquals(654, result[0]);
+		assertEquals(81, result[1]);
+	}
+
+
+	@Test
+	public void testGetTextMetrics_withText_Smaller_Font() throws IOException {
+		BufferedImage image = testObj.loadImage(VALID_FILENAME);
+
+		int[] result = testObj.getTextMetrics(image, SHORT_TEXT, FONT_POINT_20);
+
+		assertNotNull(result);
+		assertEquals(-1, Integer.compare(0, result[0]));
+		assertEquals(-1, Integer.compare(0, result[1]));
+		assertEquals(87, result[0]);
+		assertEquals(21, result[1]);
 	}
 
 	@Test
 	public void testGetTextMetrics_withoutText() throws IOException {
 		BufferedImage image = testObj.loadImage(VALID_FILENAME);
 
-		int[] result = testObj.getTextMetrics(image, "");
+		int[] result = testObj.getTextMetrics(image, "", FONT_POINT_80);
 
 		assertNotNull(result);
 		assertEquals(0, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(15, result[1]);
+		assertEquals(81, result[1]);
 	}
 
 	@Test
@@ -299,12 +334,17 @@ public class DogePhotoTest {
 		DogeText dogeText = new DogeText(WOW, 10, 10, 40, 40);
 		Mockito.when(bufferedImageMock.getGraphics()).thenReturn(graphicsMock);
 		Mockito.when(graphicsMock.getFont()).thenReturn(fontMock);
+		testObj.setRandomGenerator(randomGeneratorMock);
+		Mockito.when(randomGeneratorMock.nextFloat()).thenReturn(1f);
+		Mockito.when(randomGeneratorMock.nextFloat()).thenReturn(0f);
+		Mockito.when(randomGeneratorMock.nextFloat()).thenReturn(0f);
 
 		
-		testObj.addTextToImage(bufferedImageMock, dogeText);
+		testObj.addTextToImage(bufferedImageMock, dogeText, FONT_POINT_80);
 		
 		Mockito.verify(bufferedImageMock).getGraphics();
 		Mockito.verify(graphicsMock).drawString(dogeText.getText(), dogeText.getLeft(), dogeText.getTop());
 		Mockito.verify(graphicsMock).dispose();
 	}
+	
 }
