@@ -16,6 +16,6 @@ doge.dogeMyPhoto(String fileName, int fontPointSize, List<String> dogeText);
 Will output a file called 'newimage.jpg'
 
 # Example
-![Alt text](src/test/resources/images/doge.jpg.jpg?raw=true "Original")
+![Alt text](src/test/resources/images/doge.jpg?raw=true "Original")
 
 ![Alt text](newimage.jpg?raw=true "Doge'd")
