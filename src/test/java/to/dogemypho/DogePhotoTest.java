@@ -280,8 +280,6 @@ public class DogePhotoTest {
 		assertNotNull(result);
 		assertEquals(-1, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(340, result[0]);
-		assertEquals(81, result[1]);
 	}
 
 	@Test
@@ -294,8 +292,6 @@ public class DogePhotoTest {
 		assertNotNull(result);
 		assertEquals(-1, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(654, result[0]);
-		assertEquals(81, result[1]);
 	}
 
 	@Test
@@ -307,8 +303,6 @@ public class DogePhotoTest {
 		assertNotNull(result);
 		assertEquals(-1, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(87, result[0]);
-		assertEquals(21, result[1]);
 	}
 
 	@Test
@@ -320,7 +314,6 @@ public class DogePhotoTest {
 		assertNotNull(result);
 		assertEquals(0, Integer.compare(0, result[0]));
 		assertEquals(-1, Integer.compare(0, result[1]));
-		assertEquals(81, result[1]);
 	}
 
 	@Test
